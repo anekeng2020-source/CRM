@@ -106,7 +106,7 @@ html[data-theme=dark] .sb-mode{color:#ffb98a}
 .burger:hover,.rbtn:hover{background:var(--ink);color:var(--card)}
 .burger svg,.rbtn svg{width:19px;height:19px}
 .rbtn .bd{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--danger);color:#fff;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
-.crumb{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--sub);min-width:0}
+.crumb{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--sub);min-width:0;flex-shrink:0;max-width:40%}
 .crumb b{color:var(--ink);font-weight:700;font-size:20px;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .topbar .grow{flex:1}
 .cmdbar{flex:0 1 300px;display:flex;align-items:center;gap:8px;background:var(--card);border-radius:999px;padding:0 14px;height:44px}
@@ -1579,7 +1579,7 @@ PAGES.dashboard=()=>{const D=dashData();const mk=monthKey(today());const acts=vi
   const reps=coUsers().filter(u=>u.role!=="Viewer").map(u=>({u,v:sum(D.won.filter(d=>d.owner===u.username&&monthKey(d.wonDate||d.closeDate)===mk),"amount"),n:D.open.filter(d=>d.owner===u.username).length})).sort((a,b)=>b.v-a.v);const rmx=Math.max(1,...reps.map(r=>r.v));
   const att=D.target?Math.round(sum(D.wonM,"amount")/D.target*100):0;
   const md=MODES[curMode()];
-  return `<div class="pghead"><div class="pg-ic">${svg("home")}</div><div class="pg-tx"><h1>${T("สวัสดี","Hello")}, ${esc((me().fullName||"").split(" ")[0])} 👋</h1><p>${T("ภาพรวมงานขาย","Sales overview")} · ${esc(curCo().name||"")} · ${pill(T(md.th,md.en),"warn")}</p></div>
+  return `<div class="pghead" style="justify-content:flex-end">
     <div class="pg-act">${canEdit()?`<button class="btn btn-ghost" onclick="editRec('leads')">${svg("userplus")}${T("ลีดใหม่","New lead")}</button><button class="btn btn-primary" onclick="editRec('deals')">${svg("plus")}${T("ดีลใหม่","New deal")}</button>`:""}</div></div>
   <div class="statgrid g3">
     <div class="stat" onclick="route('pipeline')"><div class="s-ic">${svg("target")}</div><div class="s-body"><div class="s-num">${money(D.pipe)}</div><div class="s-lb">${T("มูลค่าไปป์ไลน์","Pipeline value")} · ${D.open.length} ${T("ดีล","deals")}</div></div></div>
