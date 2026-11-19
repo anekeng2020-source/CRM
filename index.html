@@ -2049,7 +2049,7 @@ function route(page,keep){
   if(!session.user)return renderLogin();
   const m=MENU_BY[page];
   if(!m||!PAGES[page]||!canSeeMenu(page)){page=isSA()&&!session.company?"sa-overview":firstVisiblePage();if(!canSeeMenu(page)&&!(isSA()&&MENU_BY[page]&&MENU_BY[page].sa)){document.getElementById("content").innerHTML=emptyBox(T("ไม่มีเมนูที่ใช้ได้","No menus available"),T("ติดต่อผู้ดูแลระบบ","Contact your administrator"));return}}
-  const changed=CUR!==page;CUR=page;if(location.hash!=="#"+page)history.replaceState(null,"","#"+page);
+  const changed=CUR!==page;CUR=page;if(location.hash!=="#"+page){try{history.replaceState(null,"",location.pathname+location.search+"#"+page)}catch(e){}}
   const g=GROUPS.find(x=>x.id===MENU_BY[page].g);
   document.getElementById("crumb").innerHTML=`${g&&g.id!=="main"?`<span>${esc(g.id==="mode"?T(MODES[curMode()].th,MODES[curMode()].en):T(g.th,g.en))}</span><span class="sep">›</span>`:""}<b>${esc(mlabelOf(page))}</b>`;
   const c=document.getElementById("content");
