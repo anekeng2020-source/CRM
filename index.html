@@ -2029,7 +2029,7 @@ function buildShell(){if(!session.user)return renderLogin();const co=curCo();
   </header>${session.imp?`<div class="impbar">${svg("eye","xi")} ${T("กำลังดูในฐานะ","Viewing as")} ${esc(me().fullName)} (${esc(me().role)}) · ${esc(co.name)}<button class="btn btn-primary btn-xs" onclick="stopImpersonate()">${T("กลับเป็น Super Admin","Back to Super Admin")}</button></div>`:""}
   <main class="content" id="content"></main><footer class="appfoot">myib CRM · ${T("เวอร์ชัน","Version")} ${APP.VER} · © ${new Date().getFullYear()} ${esc(co.name||"")}</footer></div></div>`;
   buildSidebar();refreshBadges()}
-function buildSidebar(){const sb=document.getElementById("sidebar");if(!sb)return;const co=curCo();const md=MODES[curMode()];const q=(window._sbq||"").toLowerCase();
+function buildSidebar(){const sb=document.getElementById("sidebar");if(!sb)return;const _old=sb.querySelector(".sb-scroll");const _st=_old?_old.scrollTop:(window._sbScroll||0);const co=curCo();const md=MODES[curMode()];const q=(window._sbq||"").toLowerCase();
   const item=m=>`<div class="nav-item ${CUR===m.id?"active":""}" onclick="route('${m.id}');mobSb(false)" title="${esc(mlabelOf(m.id))}"><span class="ni-ic">${svg(m.ic)}</span><span class="ni-lb">${esc(mlabelOf(m.id))}</span>${m.id==="inbox"&&DB?(()=>{const n=DB.activities.filter(a=>!a.done&&a.owner===me().username&&a.date<=today()).length;return n?`<span class="ni-bd">${n}</span>`:""})():""}</div>`;
   let html="";GROUPS.forEach(g=>{let ms=MENU.filter(m=>m.g===g.id&&canSeeMenu(m.id));if(q)ms=ms.filter(m=>mlabelOf(m.id).toLowerCase().includes(q));if(!ms.length)return;
     if(g.id==="main"){html+=ms.map(item).join("");return}
@@ -2039,7 +2039,8 @@ function buildSidebar(){const sb=document.getElementById("sidebar");if(!sb)retur
   sb.innerHTML=`<div class="sb-brand"><div class="sb-logo"><img src="${LOGO_SRC}" alt="myib"></div><div class="bt"><b>CRM</b><span>${esc(co.name||"Super Admin")}</span></div></div>
    ${session.company?`<div class="sb-mode">${svg(md.ic)}<span>${esc(T(md.th,md.en))}</span></div>`:""}
    <label class="sb-search">${svg("search")}<input id="sbq" placeholder="${T("ค้นหาเมนู...","Search menu...")}" value="${esc(window._sbq||"")}" oninput="window._sbq=this.value;buildSidebar();const i=document.getElementById('sbq');i.focus();i.setSelectionRange(i.value.length,i.value.length)"></label>
-   <div class="sb-scroll">${html||`<div class="empty-mini">-</div>`}</div><div class="sb-foot">© ${new Date().getFullYear()} myib · CRM ${APP.VER}</div>`}
+   <div class="sb-scroll">${html||`<div class="empty-mini">-</div>`}</div><div class="sb-foot">© ${new Date().getFullYear()} myib · CRM ${APP.VER}</div>`;
+  const _sc=sb.querySelector(".sb-scroll");if(_sc){_sc.scrollTop=_st;_sc.onscroll=()=>{window._sbScroll=_sc.scrollTop};const a=_sc.querySelector(".nav-item.active");if(a){const r=a.getBoundingClientRect(),c=_sc.getBoundingClientRect();if(r.top<c.top)_sc.scrollTop-=c.top-r.top+8;else if(r.bottom>c.bottom)_sc.scrollTop+=r.bottom-c.bottom+8}}}
 function sbToggle(g,v){sbOpen[g]=v;try{localStorage.setItem("_crm_sb",JSON.stringify(sbOpen))}catch(e){}buildSidebar()}
 function toggleSb(){if(window.innerWidth<=900){mobSb(!document.getElementById("sidebar").classList.contains("mob"));return}SBMINI=!SBMINI;document.getElementById("sidebar").classList.toggle("mini",SBMINI);document.getElementById("main").classList.toggle("mini",SBMINI)}
 function mobSb(on){const s=document.getElementById("sidebar");if(!s)return;s.classList.toggle("mob",on);document.getElementById("sbBackdrop").classList.toggle("hide",!on)}
